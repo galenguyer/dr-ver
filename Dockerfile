@@ -12,4 +12,3 @@ RUN pip install -r requirements.txt
 ADD . /app
 
 ENTRYPOINT ["gunicorn", "dr-ver:APP"]
-CMD ["--bind=0.0.0.0:8080"]

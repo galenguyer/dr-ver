@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Dr. Ver</title>
+    </head>
+    <body>
+        {% if commit_hash %}
+        <div class="git">
+            <p>
+            <a href="https://github.com/galenguyer/dr-ver/tree/{{ commit_hash }}">Check out this project on GitHub ({{ commit_hash }})</a>
+            </p>
+        </div>
+        {% endif %}
+    </body>
+</html>

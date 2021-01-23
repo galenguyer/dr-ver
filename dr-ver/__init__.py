@@ -2,8 +2,9 @@
 
 import os
 import subprocess
+import random
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, request, render_template, redirect, abort
 import redis
 
 APP = Flask(__name__)
@@ -37,3 +38,30 @@ def _send_favicon():
 @APP.route('/')
 def _index():
     return render_template('index.html', commit_hash=commit_hash)
+
+@APP.route('/api/v0/shorten', methods=['POST'])
+def _post_shorten():
+    data = request.get_json(force=True)
+    key = generate_url()
+    r.set(key, data['url'])
+    return jsonify({'key': key})
+
+@APP.route('/<path:key>')
+def _get_key(key):
+    try:
+        url = r.get(key).decode('UTF-8')
+        return redirect(url)
+    except:
+        abort(404)
+
+
+def generate_url():
+    keyspace = 'abcdefghijklmnopqrstuvwxyz'
+    minlength = 4
+    tryCount = 0
+    key = ''
+    for attempt in range(0, len(keyspace) ** minlength):
+        for i in range(0, minlength):
+            key += random.choice(keyspace)
+        if r.get(key) is None:
+            return key

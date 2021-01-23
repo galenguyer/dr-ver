@@ -1,2 +1,2 @@
 # dr-ver
-A Flask-Redis Link Shortener
+A simple link shortener, written with love

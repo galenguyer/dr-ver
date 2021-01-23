@@ -1,56 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>Dr. Ver</title>
+        <style>
+            * {
+                font-family: Arial, Helvetica, sans-serif;
+                font-weight: 300;
+                text-align: center;
+                box-sizing: border-box;
+            }
+            body {
+                width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+            #container {
+                width: 90%;
+                padding-top: 12px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            #input_url {
+                width: clamp(8px, 100%, 512px);
+                margin: 8px;
+                text-align: left;
+            }
+            .git {
+                font-style: italic;
+            }
+        </style>
     </head>
     
     <body>
-        <h1>Dr. Ver</h1>
-        <h2>A simple link shortener, written with love</h2>
-        <input name="url" id="input_url" />
-        <br>
-        <button id="submit" onclick="submit()" value="Generate">Generate</button>
-        <div id="result">
-            <p><a id="url"></a></p>
-        </div>
-        <script>
-            function submit() {
-                const _data = {
-                    url: document.getElementById("input_url").value,
-                }
-                
-                fetch('/api/v0/shorten', {
-                    method: "POST",
-                    body: JSON.stringify(_data),
-                    headers: {"Content-type": "application/json; charset=UTF-8"}
-                })
-                .then(response => response.json()) 
-                .then(json => {
-                    console.log(json);
-                    document.getElementById("url").textContent = window.location.origin + "/" + json.key;
-                    document.getElementById("url").setAttribute("href", window.location.origin + "/" + json.key);
-                })
-                .catch(err => console.log(err));
+        <div id="container">
+            <h1>Dr. Ver</h1>
+            <h2>A simple link shortener, written with love</h2>
+            <input name="url" id="input_url">
+            <br>
+            <button id="submit" onclick="submit()" value="Generate">Generate</button>
+            <div id="result">
+                <p><a id="url"></a></p>
+            </div>
+            <script>
+                function submit() {
+                    const _data = {
+                        url: document.getElementById("input_url").value,
+                    }
+                    
+                    fetch('/api/v0/shorten', {
+                        method: "POST",
+                        body: JSON.stringify(_data),
+                        headers: {"Content-type": "application/json; charset=UTF-8"}
+                    })
+                    .then(response => response.json()) 
+                    .then(json => {
+                        document.getElementById("url").textContent = window.location.origin + "/" + json.key;
+                        document.getElementById("url").setAttribute("href", window.location.origin + "/" + json.key);
+                    })
+                    .catch(err => console.log(err));
 
-            }
-            document.getElementById("input_url").addEventListener("keydown", function (event) {
-            // Number 13 is the "Enter" key on the keyboard
-            if (event.keyCode === 13) {
-                // Cancel the default action, if needed
-                event.preventDefault();
-                // Trigger the button element with a click
-                document.getElementById("submit").click();
-            }
-        });
-        </script>
-        {% if commit_hash %}
-        <div class="git">
-            <p>
-            <a href="https://github.com/galenguyer/dr-ver/tree/{{ commit_hash }}">Check out this project on GitHub ({{ commit_hash }})</a>
-            </p>
+                }
+                document.getElementById("input_url").addEventListener("keydown", function (event) {
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    // Cancel the default action, if needed
+                    event.preventDefault();
+                    // Trigger the button element with a click
+                    document.getElementById("submit").click();
+                }
+            });
+            </script>
+            
+            <div class="git">
+                <p>
+                <a href="https://github.com/galenguyer/dr-ver/tree/5d91862">Check out this project on GitHub (5d91862)</a>
+                </p>
+            </div>
         </div>
-        {% endif %}
     </body>
 </html>

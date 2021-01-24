@@ -40,12 +40,26 @@ def _index():
     return render_template('index.html', commit_hash=commit_hash)
 
 @APP.route('/api/v0/shorten', methods=['POST'])
-def _post_shorten():
+def _post_api_v0_shorten():
     data = request.get_json(force=True)
     key = generate_url()
     r.set(f'key:{key}', data['url'])
     count = r.incr('count')
     return jsonify({'key': key, 'count': count})
+
+@APP.route('/api/v0/stats/<path:key>')
+def _get_api_v0_stats_key(key):
+    try:
+        url = r.get(f'key:{key}').decode('UTF-8')
+        count = r.get(f'count:{key}').decode('UTF-8')
+        return jsonify({'url': url, 'count': count})
+    except:
+        abort(404)
+
+@APP.route('/api/v0/stats')
+def _get_api_v0_stats():
+    count = r.get('count').decode('UTF-8')
+    return jsonify({'count': count})
 
 @APP.route('/<path:key>')
 def _get_key(key):

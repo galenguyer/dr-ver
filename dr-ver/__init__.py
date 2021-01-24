@@ -43,13 +43,15 @@ def _index():
 def _post_shorten():
     data = request.get_json(force=True)
     key = generate_url()
-    r.set(key, data['url'])
-    return jsonify({'key': key})
+    r.set(f'key:{key}', data['url'])
+    count = r.incr('count')
+    return jsonify({'key': key, 'count': count})
 
 @APP.route('/<path:key>')
 def _get_key(key):
     try:
-        url = r.get(key).decode('UTF-8')
+        url = r.get(f'key:{key}').decode('UTF-8')
+        r.incr(f'count:{key}')
         return redirect(url)
     except:
         abort(404)

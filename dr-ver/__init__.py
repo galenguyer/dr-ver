@@ -51,7 +51,7 @@ def _post_api_v0_shorten():
 def _get_api_v0_stats_key(key):
     try:
         url = r.get(f'key:{key}').decode('UTF-8')
-        clicks = r.get(f'count:{key}').decode('UTF-8')
+        clicks = r.get(f'clicks:{key}').decode('UTF-8')
         return jsonify({'url': url, 'clicks': clicks})
     except:
         abort(404)
@@ -60,7 +60,7 @@ def _get_api_v0_stats_key(key):
 def _get_api_v0_stats():
     count = r.get('count').decode('UTF-8')
     clicks = 0
-    for key in r.scan_iter("count:*"):
+    for key in r.scan_iter("clicks:*"):
         clicks += int(r.get(key).decode('UTF-8'))
     return jsonify({'count': count, 'clicks': clicks})
 
@@ -68,7 +68,7 @@ def _get_api_v0_stats():
 def _get_key(key):
     try:
         url = r.get(f'key:{key}').decode('UTF-8')
-        r.incr(f'count:{key}')
+        r.incr(f'clicks:{key}')
         return redirect(url)
     except:
         abort(404)

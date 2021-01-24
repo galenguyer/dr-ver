@@ -51,7 +51,7 @@ def _post_api_v0_shorten():
 def _get_api_v0_stats_key(key):
     try:
         url = r.get(f'key:{key}').decode('UTF-8')
-        clicks = r.get(f'clicks:{key}').decode('UTF-8')
+        clicks = int(r.get(f'clicks:{key}').decode('UTF-8'))
         return jsonify({'url': url, 'clicks': clicks})
     except:
         abort(404)

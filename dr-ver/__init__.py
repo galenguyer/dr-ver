@@ -51,15 +51,18 @@ def _post_api_v0_shorten():
 def _get_api_v0_stats_key(key):
     try:
         url = r.get(f'key:{key}').decode('UTF-8')
-        count = r.get(f'count:{key}').decode('UTF-8')
-        return jsonify({'url': url, 'count': count})
+        clicks = r.get(f'count:{key}').decode('UTF-8')
+        return jsonify({'url': url, 'clicks': clicks})
     except:
         abort(404)
 
 @APP.route('/api/v0/stats')
 def _get_api_v0_stats():
     count = r.get('count').decode('UTF-8')
-    return jsonify({'count': count})
+    clicks = 0
+    for key in r.scan_iter("count:*"):
+        clicks += int(r.get(key).decode('UTF-8'))
+    return jsonify({'count': count, 'clicks': clicks})
 
 @APP.route('/<path:key>')
 def _get_key(key):

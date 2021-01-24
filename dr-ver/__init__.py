@@ -65,5 +65,5 @@ def generate_url():
     for attempt in range(0, len(keyspace) ** minlength):
         for i in range(0, minlength):
             key += random.choice(keyspace)
-        if r.get(key) is None:
+        if r.get(f'key:{key}') is None:
             return key

@@ -40,16 +40,15 @@
             <input name="url" id="input_url">
             <br>
             <button id="submit" onclick="submit()" value="Generate">Generate</button>
-            <div id="result">
-                <p><a id="url"></a></p>
-            </div>
+            <p><a id="url"></a></p>
+            <button onclick="copyElementText('url')">Copy to Clipboard</button>
             <script>
                 function submit() {
                     const _data = {
                         url: document.getElementById("input_url").value,
                     }
                     
-                    fetch('/api/v0/shorten', {
+                    fetch('https://s.nyaa.gay/api/v0/shorten', {
                         method: "POST",
                         body: JSON.stringify(_data),
                         headers: {"Content-type": "application/json; charset=UTF-8"}
@@ -57,7 +56,7 @@
                     .then(response => response.json()) 
                     .then(json => {
                         document.getElementById("url").textContent = window.location.origin + "/" + json.key;
-                        document.getElementById("url").setAttribute("href", window.location.origin + "/" + json.key);
+                        //document.getElementById("url").setAttribute("href", window.location.origin + "/" + json.key);
                     })
                     .catch(err => console.log(err));
 

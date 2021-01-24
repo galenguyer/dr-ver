@@ -62,6 +62,16 @@
                     .catch(err => console.log(err));
 
                 }
+                function copyElementText(id) {
+                    var text = document.getElementById(id).innerText;
+                    var elem = document.createElement("textarea");
+                    document.body.appendChild(elem);
+                    elem.value = text;
+                    elem.select();
+                    elem.setSelectionRange(0, 99999); /*For mobile devices*/
+                    document.execCommand("copy");
+                    document.body.removeChild(elem);
+                }
                 document.getElementById("input_url").addEventListener("keydown", function (event) {
                 // Number 13 is the "Enter" key on the keyboard
                 if (event.keyCode === 13) {

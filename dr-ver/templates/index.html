@@ -98,11 +98,13 @@
             });
             </script>
             
+            {% if commit_hash %}
             <div class="git">
                 <p>
-                <a href="https://github.com/galenguyer/dr-ver/tree/5d91862">Check out this project on GitHub (5d91862)</a>
+                <a href="https://github.com/galenguyer/dr-ver/tree/{{ commit_hash }}">Check out this project on GitHub ({{ commit_hash }})</a>
                 </p>
             </div>
+            {% endif %}
         </div>
     </body>
 </html>

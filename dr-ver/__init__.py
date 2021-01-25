@@ -3,6 +3,8 @@
 import os
 import subprocess
 import random
+import string
+import itertools
 
 from flask import Flask, jsonify, request, render_template, redirect, abort
 import redis
@@ -27,6 +29,31 @@ try:
 # pylint: disable=bare-except
 except:
     pass
+
+
+initial_consonants = (set(string.ascii_lowercase) - set('aeiou')
+                      # remove those easily confused with others
+                      - set('qxc')
+                      # add some crunchy clusters
+                      | set(['bl', 'br', 'cl', 'cr', 'dr', 'fl',
+                             'fr', 'gl', 'gr', 'pl', 'pr', 'sk',
+                             'sl', 'sm', 'sn', 'sp', 'st', 'str',
+                             'sw', 'tr'])
+                      )
+final_consonants = (set(string.ascii_lowercase) - set('aeiou')
+                    # confusable
+                    - set('qxcsj')
+                    # crunchy clusters
+                    | set(['ct', 'ft', 'mp', 'nd', 'ng', 'nk', 'nt',
+                           'pt', 'sk', 'sp', 'ss', 'st'])
+                    )
+vowels = 'aeiou' # we'll keep this simple
+# each syllable is consonant-vowel-consonant "pronounceable"
+syllables = map(''.join, itertools.product(initial_consonants, 
+                                           vowels, 
+                                           final_consonants))
+def gibberish(wordcount, wordlist=syllables):
+    return '-'.join(random.sample(wordlist, wordcount))
 
 @APP.route('/static/<path:path>', methods=['GET'])
 def _send_static(path):
@@ -75,12 +102,13 @@ def _get_key(key):
 
 
 def generate_url():
-    keyspace = 'abcdefghijklmnopqrstuvwxyz'
-    minlength = 4
-    tryCount = 0
+    minlength = 1
     key = ''
-    for attempt in range(0, len(keyspace) ** minlength):
-        for i in range(0, minlength):
-            key += random.choice(keyspace)
-        if r.get(f'key:{key}') is None:
-            return key
+    while True:
+        tryCount = len(syllables) ** minlength
+        for attempt in range(0, tryCount):
+            key = gibberish(minlength)
+            if r.get(f'key:{key}') is None:
+                return key
+        minlength += 1
+    return None

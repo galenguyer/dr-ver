@@ -64,7 +64,11 @@ def _send_favicon():
 
 @APP.route('/')
 def _index():
-    return render_template('index.html', commit_hash=commit_hash)
+    count = int(r.get('count').decode('UTF-8'))
+    clicks = 0
+    for key in r.scan_iter("clicks:*"):
+        clicks += int(r.get(key).decode('UTF-8'))
+    return render_template('index.html', commit_hash=commit_hash, count=count, clicks=clicks)
 
 @APP.route('/api/v0/shorten', methods=['POST'])
 def _post_api_v0_shorten():

@@ -1,4 +1,4 @@
-""" A small flask Hello World """
+""" A simple link shortener, written with love (also flask and redis) """
 
 import os
 import subprocess
